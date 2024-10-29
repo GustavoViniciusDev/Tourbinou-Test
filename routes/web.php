@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -14,14 +15,41 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+Route::get('/ride', function () {
+    return Inertia::render('Ride');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/login', function () {
+    return Inertia::render('Auth/Login');
+})->middleware('guest')->name('login');
+
+Route::get('/register', function () {
+    return Inertia::render('Auth/Register');
+})->middleware('guest')->name('register');
+
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/login', function () {
+        return redirect()->route('dashboard');
+    });
+
+    Route::get('/register', function () {
+        return redirect()->route('dashboard');
+    });
+
+    Route::get('/', function () {
+        return redirect()->route('dashboard');
+    });
+
+    Route::get('/destination', function () {
+        return Inertia::render('Destination');
+    })->name('destination');
+
+    Route::get('/register_destination', [DestinationController::class, 'create'])->name('register_destination');
+    Route::post('/register_destination', [DestinationController::class, 'store'])->name('destination.store');
+});
+
+Route::fallback(function () {
+    return Inertia::render('404NotFound');
 });
 
 require __DIR__.'/auth.php';
