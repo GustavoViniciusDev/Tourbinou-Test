@@ -1,6 +1,6 @@
 # Tourbinou Test
 
-Um projeto Laravel simples utilizando Breeze com Vue.js. Este repositório fornece uma base para quem deseja iniciar um projeto com estas tecnologias.
+Teste Técnico para vaga de Desenvolvedor Full-Stack na Tourbinou.
 
 ## Pré-requisitos
 
