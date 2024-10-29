@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import RadeLayout from '@/Layouts/RideLayout.vue';
+import RadeLayout from '@/Pages/Rides/RideLayout.vue';
 </script>
 
 <template>

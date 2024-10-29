@@ -21,6 +21,9 @@
         "vue-tsc": "^2.0.24"
     },
     "dependencies": {
-        "lucide-vue-next": "^0.453.0"
+        "@heroicons/vue": "^2.1.5",
+        "fetch": "^1.1.0",
+        "lucide-vue-next": "^0.453.0",
+        "vue-toastification": "^2.0.0-rc.5"
     }
 }

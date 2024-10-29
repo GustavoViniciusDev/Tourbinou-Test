@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, toRefs } from 'vue';
 
 interface Estado {
+    id: number;
     sigla: string;
     nome: string;
 }
@@ -13,51 +14,40 @@ interface Cidade {
     nome: string;
 }
 
-const cidade = ref<string>('Recife');
-const estado = ref<string>('');
+
+const props = defineProps<{ destination?: { id:string; cidade: string; estado: string } }>();
 const estados = ref<Estado[]>([]);
 const cidades = ref<Cidade[]>([]);
 
-const fetchEstados = async () => {
+const form = useForm({
+    cidade: props.destination?.cidade || '',
+    estado: props.destination?.estado || '',
+});
+
+const buscarEstados = async () => {
     try {
-        const response = await fetch('https://servicodados.ibge.gov.br/api/v2/malhas');
-        const data = await response.json();
-        estados.value = data.map((estado: { sigla: string; nome: string }) => ({
-            sigla: estado.sigla,
-            nome: estado.nome,
-        }));
+        const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados');
+        estados.value = await response.json();
     } catch (error) {
         console.error('Erro ao buscar estados:', error);
     }
 };
 
-const fetchCidades = async (estadoSigla: string) => {
+const buscarCidades = async (uf: string) => {
     try {
-        const response = await fetch(`https://servicodados.ibge.gov.br/api/v2/malhas/${estadoSigla}/cidades`);
-        const data = await response.json();
-        cidades.value = data.map((cidade: { id: number; nome: string }) => ({
-            id: cidade.id,
-            nome: cidade.nome,
-        }));
+        const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`);
+        cidades.value = await response.json();
     } catch (error) {
         console.error('Erro ao buscar cidades:', error);
     }
 };
 
-const salvar = () => {
-    console.log('Salvando...', { cidade: cidade.value, estado: estado.value });
-};
-
-const cancelar = () => {
-    console.log('Cancelando...');
-};
-
-const voltar = () => {
-    console.log('Voltando...');
-};
-
-// Chamar fetchEstados quando o componente for montado
-onMounted(fetchEstados);
+onMounted(() => {
+    buscarEstados();
+    if (form.estado) {
+        buscarCidades(form.estado);
+    }
+});
 </script>
 
 <template>
@@ -66,24 +56,24 @@ onMounted(fetchEstados);
         <div class="min-h-screen bg-gray-100 p-4">
             <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-900">Destino</h1>
-                    <button class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
-                        voltar
-                    </button>
+                    <h1 class="text-3xl font-bold text-gray-900">Destinos</h1>
+                    <Link :href="route('destination.index')"
+                          class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
+                        Voltar
+                    </Link>
                 </div>
-                <form @submit.prevent="salvar" class="p-4 bg-white space-y-4">
+                <form @submit.prevent="form.post(route(props.destination ? 'destination.update' : 'destination.store', { id: props.destination?.id }))" class="p-4 bg-white space-y-4">
                     <div>
                         <label for="estado" class="block text-sm font-medium text-gray-700">Estado</label>
-                        <select id="estado" v-model="estado"
-                            @change="fetchCidades(estado)"
+                        <select id="estado" v-model="form.estado" @change="buscarCidades(form.estado)"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="" disabled>Selecione um estado</option>
-                            <option v-for="est in estados" :key="est.sigla" :value="est.sigla">{{ est.nome }}</option>
+                            <option v-for="est in estados" :key="est.id" :value="est.sigla">{{ est.nome }}</option>
                         </select>
                     </div>
                     <div>
                         <label for="cidade" class="block text-sm font-medium text-gray-700">Cidade</label>
-                        <select id="cidade" v-model="cidade"
+                        <select id="cidade" v-model="form.cidade"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="" disabled>Selecione uma cidade</option>
                             <option v-for="cid in cidades" :key="cid.id" :value="cid.nome">{{ cid.nome }}</option>
@@ -91,12 +81,12 @@ onMounted(fetchEstados);
                     </div>
 
                     <div class="flex justify-end space-x-2">
-                        <button type="button" @click="cancelar"
-                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        <button type="button"
+                        class="px-4 py-2 border border-red-500 text-red-500 rounded hover:bg-red-50 transition-colors">
                             Cancelar
                         </button>
                         <button type="submit"
-                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        class="px-4 py-2 bg-emerald-500 text-white rounded hover:bg-emerald-600 transition-colors">
                             Salvar
                         </button>
                     </div>

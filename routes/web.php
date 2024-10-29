@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DestinationController;
+use App\Http\Controllers\RideController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -17,7 +18,7 @@ Route::get('/', function () {
 
 Route::get('/ride', function () {
     return Inertia::render('Ride');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('ride.index');
 
 Route::get('/login', function () {
     return Inertia::render('Auth/Login');
@@ -29,23 +30,29 @@ Route::get('/register', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/login', function () {
-        return redirect()->route('dashboard');
+        return redirect()->route('ride.index');
     });
 
     Route::get('/register', function () {
-        return redirect()->route('dashboard');
+        return redirect()->route('ride.index');
     });
 
     Route::get('/', function () {
-        return redirect()->route('dashboard');
+        return redirect()->route('ride.index');
     });
 
-    Route::get('/destination', function () {
-        return Inertia::render('Destination');
-    })->name('destination');
-
+    Route::get('/destination', [DestinationController::class, 'index'])->name('destination.index');
     Route::get('/register_destination', [DestinationController::class, 'create'])->name('register_destination');
     Route::post('/register_destination', [DestinationController::class, 'store'])->name('destination.store');
+    Route::get('/destination/{id}/edit', [DestinationController::class, 'edit'])->name('destination.edit');
+    Route::post('/destination/{id}', [DestinationController::class, 'update'])->name('destination.update');
+    Route::delete('/destination/{id}', [DestinationController::class, 'destroy'])->name('destination.destroy');
+
+    Route::get('/ride', [RideController::class, 'index'])->name('ride.index');
+    Route::get('/register_ride', [RideController::class, 'create'])->name('register_ride');
+    Route::post('/register_ride', [RideController::class, 'store'])->name('ride.store');
+
+
 });
 
 Route::fallback(function () {

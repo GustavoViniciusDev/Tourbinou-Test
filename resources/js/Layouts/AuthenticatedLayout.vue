@@ -14,7 +14,7 @@ import { Link } from '@inertiajs/vue3';
             <nav class="border-b border-gray-100 bg-white">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
                     <div class="flex items-center space-x-4">
-                        <Link :href="route('dashboard')">
+                        <Link :href="route('ride.index')">
                         <svg width="260" height="60" class="w-24 h-auto md:w-40 lg:w-52" viewBox="0 0 320 88"
                             fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -64,12 +64,13 @@ import { Link } from '@inertiajs/vue3';
                                 fill="#FE5000" />
                         </svg>
                         </Link>
-                        <NavLink :href="route('dashboard')"
-                            :class="route().current('dashboard') ? 'active' : 'text-gray-700 hover:text-gray-900'">
+                        <NavLink :href="route('ride.index')"
+                            :class="route().current('ride.index') ? 'active' : 'text-gray-700 hover:text-gray-900'">
                         Passeios
                         </NavLink>
-                        <NavLink :href="route('destination')"
-                         class="text-gray-700 hover:text-gray-900">Destinos</NavLink>
+                        <NavLink :href="route('destination.index')"
+                            :class="route().current('destination.index') ? 'active' : 'text-gray-700 hover:text-gray-900'">
+                        Destinos</NavLink>
                     </div>
 
                     <div class="flex space-x-4">
