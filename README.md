@@ -11,6 +11,8 @@ Antes de começar, você precisa ter as seguintes ferramentas instaladas:
 - [Composer](https://getcomposer.org/download/)
 - [Node.js](https://nodejs.org/) (>= 14.x)
 - [NPM](https://www.npmjs.com/get-npm) (instalado automaticamente com o Node.js)
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
 ## Instalação
 
@@ -92,6 +94,55 @@ php artisan serve
 ```
 
 Agora você pode acessar a aplicação em `http://localhost:8000`.
+
+## Executar Projeto com Docker
+
+Siga os passos abaixo para clonar e configurar o projeto localmente:
+
+1. **Clone o repositório:**
+
+   ```bash
+   git clone https://github.com/GustavoViniciusDev/Tourbinou-Test.git
+   ```
+
+2. **Navegue até o diretório do projeto:**
+
+   ```bash
+   cd Tourbinou-Test
+   ```
+
+3. **Crie um arquivo `.env` a partir do arquivo de exemplo:**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+4. **Configure seu banco de dados no arquivo `.env`:**
+
+   Altere as seguintes linhas no seu arquivo `.env` de acordo com seu ambiente:
+
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=db
+   DB_PORT=3306
+   DB_DATABASE=nome_do_banco
+   DB_USERNAME=usuario
+   DB_PASSWORD=senha
+   ```
+
+## Executando o Projeto com Docker Compose
+
+Para iniciar o projeto usando Docker Compose, siga os passos abaixo:
+
+1. **Certifique-se de que o Docker e o Docker Compose estão instalados.**
+
+2. **Execute o comando abaixo para iniciar os contêineres:**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+3. **Acesse a aplicação em `http://localhost:8000`.**
 
 ## Estrutura do Projeto
 
