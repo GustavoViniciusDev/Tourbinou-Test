@@ -95,7 +95,7 @@ php artisan serve
 
 Agora você pode acessar a aplicação em `http://localhost:8000`.
 
-## Executar Projeto com Docker
+## Usando o Docker
 
 Siga os passos abaixo para clonar e configurar o projeto localmente:
 
