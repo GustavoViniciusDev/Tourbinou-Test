@@ -1,3 +1,4 @@
+
 # Tourbinou Test
 
 Teste Técnico para vaga de Desenvolvedor Full-Stack na Tourbinou.
@@ -64,17 +65,23 @@ Siga os passos abaixo para clonar e configurar o projeto localmente:
    php artisan migrate
    ```
 
-8. **Instale as dependências do Node.js:**
+8. **Torne o storage público:**
+
+   ```bash
+   php artisan storage:link
+   ```
+
+9. **Instale as dependências do Node.js:**
 
    ```bash
    npm install
    ```
 
-9. **Compile os ativos:**
+10. **Compile os ativos:**
 
-   ```bash
-   npm run dev
-   ```
+    ```bash
+    npm run dev
+    ```
 
 ## Executando o Projeto
 
@@ -90,8 +97,15 @@ Agora você pode acessar a aplicação em `http://localhost:8000`.
 
 - **app/**: Contém o código-fonte da aplicação.
 - **resources/js/**: Contém o código Vue.js.
+- **resources/views/**: Contém os arquivos de visualização do Laravel.
 - **routes/**: Define as rotas da aplicação.
 - **database/**: Contém as migrações e seeders.
+
+## Funcionalidades
+
+- Cadastro e gerenciamento de destinos e passeios.
+- Exibição de cidades e estados com validação de campos obrigatórios.
+- Interface moderna utilizando Vue.js e Inertia.js.
 
 ## Contribuição
 

@@ -4,10 +4,16 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { PencilIcon, TrashIcon } from 'lucide-vue-next';
 import { useToast } from 'vue-toastification';
 
+interface Ride {
+    id: string;
+    destino_id: string;
+}
+
 interface Destination {
     id: string;
     cidade: string;
     estado: string;
+    rides: Ride[];
 }
 
 const props = defineProps<{ destinations: Destination[] }>();
@@ -28,6 +34,14 @@ const deleteDestination = (id: string) => {
         });
     }
 };
+
+const countRides = (destination: Destination): string => {
+    const rideCount = destination.rides.length;
+    if (rideCount > 0) {
+        return `${rideCount} ${rideCount === 1 ? 'passeio' : 'passeios'}`;
+    }
+    return 'Nenhum passeio';
+}
 </script>
 
 <template>
@@ -72,7 +86,7 @@ const deleteDestination = (id: string) => {
                                     {{ destination.estado }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <!-- Você pode adicionar a coluna de Passeio, ou deixar em branco se não precisar -->
+                                    {{ countRides(destination) }} <!-- Exibe a contagem de passeios -->
                                 </td>
                                 <td
                                     class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end items-center">
@@ -85,7 +99,6 @@ const deleteDestination = (id: string) => {
                                         <TrashIcon class="h-5 w-5" />
                                     </button>
                                 </td>
-
                             </tr>
                         </tbody>
                     </table>

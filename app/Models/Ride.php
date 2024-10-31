@@ -15,6 +15,7 @@ class Ride extends Model
         'horario',
         'destino_id',
         'descricao',
+        'imagem',
     ];
 
     public function destination()

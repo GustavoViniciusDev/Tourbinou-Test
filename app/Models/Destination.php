@@ -10,4 +10,8 @@ class Destination extends Model
     use HasFactory;
 
     protected $fillable = ['cidade', 'estado'];
+
+    public function rides() {
+        return $this->hasMany(Ride::class, 'destino_id');
+    }
 }

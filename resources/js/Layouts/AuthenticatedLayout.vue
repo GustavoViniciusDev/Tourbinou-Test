@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
+import { ref, computed } from 'vue';
 import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+
+const { props } = usePage();
+const isAuthenticated = computed(() => props.auth.user !== null);
 </script>
 
 <template>
@@ -64,33 +63,44 @@ import { Link } from '@inertiajs/vue3';
                                 fill="#FE5000" />
                         </svg>
                         </Link>
-                        <NavLink :href="route('ride.index')"
-                            :class="route().current('ride.index') ? 'active' : 'text-gray-700 hover:text-gray-900'">
-                        Passeios
-                        </NavLink>
-                        <NavLink :href="route('destination.index')"
-                            :class="route().current('destination.index') ? 'active' : 'text-gray-700 hover:text-gray-900'">
-                        Destinos</NavLink>
-                    </div>
+                        <template v-if="isAuthenticated">
+                            <NavLink :href="route('ride.index')"
+                                :class="route().current('ride.index') ? 'active' : 'text-gray-700 hover:text-gray-900'">
+                                Passeios
+                            </NavLink>
+                            <NavLink :href="route('destination.index')"
+                                :class="route().current('destination.index') ? 'active' : 'text-gray-700 hover:text-gray-900'">
+                                Destinos</NavLink>
+                                <NavLink :href="route('store')"
+                                :class="route().current('store') ? 'active' : 'text-gray-700 hover:text-gray-900'">
+                                Loja</NavLink>
+                        </template>
 
-                    <div class="flex space-x-4">
-                        <button class="flex items-center text-gray-700 hover:text-gray-900">
-                            <svg class="mr-2" width="12" height="12" viewBox="0 0 24 25" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M10 23.5123C10 23.7775 9.89464 24.0319 9.70711 24.2194C9.51957 24.407 9.26522 24.5123 9 24.5123H1C0.734784 24.5123 0.48043 24.407 0.292893 24.2194C0.105357 24.0319 0 23.7775 0 23.5123V1.51233C0 1.24711 0.105357 0.992759 0.292893 0.805223C0.48043 0.617686 0.734784 0.512329 1 0.512329H9C9.26522 0.512329 9.51957 0.617686 9.70711 0.805223C9.89464 0.992759 10 1.24711 10 1.51233C10 1.77755 9.89464 2.0319 9.70711 2.21944C9.51957 2.40697 9.26522 2.51233 9 2.51233H2V22.5123H9C9.26522 22.5123 9.51957 22.6177 9.70711 22.8052C9.89464 22.9928 10 23.2471 10 23.5123ZM23.7075 11.8048L18.7075 6.80483C18.5199 6.61719 18.2654 6.51177 18 6.51177C17.7346 6.51177 17.4801 6.61719 17.2925 6.80483C17.1049 6.99247 16.9994 7.24696 16.9994 7.51233C16.9994 7.77769 17.1049 8.03219 17.2925 8.21983L20.5863 11.5123H9C8.73478 11.5123 8.48043 11.6177 8.29289 11.8052C8.10536 11.9928 8 12.2471 8 12.5123C8 12.7775 8.10536 13.0319 8.29289 13.2194C8.48043 13.407 8.73478 13.5123 9 13.5123H20.5863L17.2925 16.8048C17.1049 16.9925 16.9994 17.247 16.9994 17.5123C16.9994 17.7777 17.1049 18.0322 17.2925 18.2198C17.4801 18.4075 17.7346 18.5129 18 18.5129C18.2654 18.5129 18.5199 18.4075 18.7075 18.2198L23.7075 13.2198C23.8005 13.127 23.8742 13.0167 23.9246 12.8953C23.9749 12.7739 24.0008 12.6437 24.0008 12.5123C24.0008 12.3809 23.9749 12.2508 23.9246 12.1294C23.8742 12.008 23.8005 11.8977 23.7075 11.8048Z"
-                                    fill="#171717" />
-                            </svg>
-                            <Link :href="route('logout')" method="post" as="button">
-                            Sair
+                    </div>
+                    <template v-if="isAuthenticated">
+                        <div class="flex space-x-4">
+                            <button class="flex items-center text-gray-700 hover:text-gray-900">
+                                <svg class="mr-2" width="12" height="12" viewBox="0 0 24 25" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M10 23.5123C10 23.7775 9.89464 24.0319 9.70711 24.2194C9.51957 24.407 9.26522 24.5123 9 24.5123H1C0.734784 24.5123 0.48043 24.407 0.292893 24.2194C0.105357 24.0319 0 23.7775 0 23.5123V1.51233C0 1.24711 0.105357 0.992759 0.292893 0.805223C0.48043 0.617686 0.734784 0.512329 1 0.512329H9C9.26522 0.512329 9.51957 0.617686 9.70711 0.805223C9.89464 0.992759 10 1.24711 10 1.51233C10 1.77755 9.89464 2.0319 9.70711 2.21944C9.51957 2.40697 9.26522 2.51233 9 2.51233H2V22.5123H9C9.26522 22.5123 9.51957 22.6177 9.70711 22.8052C9.89464 22.9928 10 23.2471 10 23.5123ZM23.7075 11.8048L18.7075 6.80483C18.5199 6.61719 18.2654 6.51177 18 6.51177C17.7346 6.51177 17.4801 6.61719 17.2925 6.80483C17.1049 6.99247 16.9994 7.24696 16.9994 7.51233C16.9994 7.77769 17.1049 8.03219 17.2925 8.21983L20.5863 11.5123H9C8.73478 11.5123 8.48043 11.6177 8.29289 11.8052C8.10536 11.9928 8 12.2471 8 12.5123C8 12.7775 8.10536 13.0319 8.29289 13.2194C8.48043 13.407 8.73478 13.5123 9 13.5123H20.5863L17.2925 16.8048C17.1049 16.9925 16.9994 17.247 16.9994 17.5123C16.9994 17.7777 17.1049 18.0322 17.2925 18.2198C17.4801 18.4075 17.7346 18.5129 18 18.5129C18.2654 18.5129 18.5199 18.4075 18.7075 18.2198L23.7075 13.2198C23.8005 13.127 23.8742 13.0167 23.9246 12.8953C23.9749 12.7739 24.0008 12.6437 24.0008 12.5123C24.0008 12.3809 23.9749 12.2508 23.9246 12.1294C23.8742 12.008 23.8005 11.8977 23.7075 11.8048Z"
+                                        fill="#171717" />
+                                </svg>
+                                <Link :href="route('logout')" method="post" as="button">
+                                Sair
+                                </Link>
+                            </button>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="flex space-x-4">
+                            <Link :href="route('login')">
+                                Logar
                             </Link>
-                        </button>
-                    </div>
+                        </div>
+                    </template>
                 </div>
-
-
             </nav>
-
             <main>
                 <slot />
             </main>

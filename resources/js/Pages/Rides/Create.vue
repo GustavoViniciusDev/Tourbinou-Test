@@ -10,36 +10,66 @@ interface Destination {
 }
 
 const props = defineProps<{
-    destination?: { id: string; cidade: string; estado: string };
+    ride?: { id: number; nome: string; horario: string; destino_id: number; descricao: string | null; imagem: string | null };
     destinations: Destination[];
 }>();
 
 const form = useForm({
-    nome: '',
-    horario: '',
-    destino_id: '',
-    descricao: '',
+    nome: props.ride ? props.ride.nome : '',
+    horario: props.ride ? props.ride.horario : '',
+    destino_id: props.ride ? props.ride.destino_id : '',
+    descricao: props.ride && props.ride.descricao ? props.ride.descricao : '',
+    imagem: null as File | null,
 });
 
-const errors = ref<{ destino_id?: string; nome?: string; horario?: string }>({});
+const errors = ref<{ destino_id?: string; nome?: string; horario?: string; imagem?: string }>({});
 
-const validateForm = () => {
-    errors.value = {};
-
-    if (!form.destino_id) {
-        errors.value.destino_id = "O campo destino é obrigatório";
+const handleImageChange = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+        form.imagem = target.files[0];
     }
-
-    if (!form.nome) {
-        errors.value.nome = "O campo nome é obrigatório";
-    }
-
-    if (!form.horario) {
-        errors.value.horario = "O campo horário é obrigatório";
-    }
-
-    return Object.keys(errors.value).length === 0;
 };
+
+const submitForm = async () => {
+    if (validateForm()) {
+        const formData = new FormData();
+
+        formData.append('nome', form.nome);
+        formData.append('horario', form.horario);
+        formData.append('destino_id', String(form.destino_id));
+        formData.append('descricao', form.descricao);
+
+        if (form.imagem) {
+            formData.append('imagem', form.imagem);
+        }
+
+        const action = props.ride ? route('ride.update', props.ride.id) : route('ride.store');
+
+        form.post(action, {
+            data: formData,
+            preserveState: true,
+        });
+    }
+};
+
+const validateForm = (): boolean => {
+    let isValid = true;
+    if (!form.nome) {
+        isValid = false;
+        errors.value.nome = 'Nome é obrigatório.';
+    }
+    if (!form.horario) {
+        isValid = false;
+        errors.value.horario = 'Horário é obrigatório.';
+    }
+    if (!form.destino_id) {
+        isValid = false;
+        errors.value.destino_id = 'Destino é obrigatório.';
+    }
+    return isValid;
+};
+
 </script>
 
 <template>
@@ -48,16 +78,14 @@ const validateForm = () => {
         <div class="min-h-screen bg-gray-100 p-4">
             <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-900">Passeios</h1>
+                    <h1 class="text-3xl font-bold text-gray-900">
+                        {{ props.ride ? 'Editar Passeio' : 'Cadastrar Passeio' }}
+                    </h1>
                     <Link :href="route('ride.index')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
                         Voltar
                     </Link>
                 </div>
-                <form @submit.prevent="() => {
-                    if (validateForm()) {
-                        form.post(route('ride.store'));
-                    }
-                }" class="p-4 bg-white space-y-4">
+                <form @submit.prevent="submitForm" class="p-4 bg-white space-y-4" enctype="multipart/form-data">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">Nome</label>
@@ -108,11 +136,19 @@ const validateForm = () => {
                         </div>
                     </div>
 
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">Imagem</label>
+                        <input type="file" @change="handleImageChange"
+                            :class="['w-full p-2 rounded focus:ring-2 focus:ring-gray-200 outline-none',
+                                     errors.imagem ? 'border border-red-500' : 'border border-gray-300']" />
+                        <span v-if="errors.imagem" class="text-red-500 text-xs">{{ errors.imagem }}</span>
+                    </div>
+
                     <div class="flex justify-end space-x-4">
-                        <button type="button"
+                        <Link :href="route('ride.index')" type="button"
                             class="px-4 py-2 border border-red-500 text-red-500 rounded hover:bg-red-50 transition-colors">
                             Cancelar
-                        </button>
+                        </Link>
                         <button type="submit"
                             class="px-4 py-2 bg-emerald-500 text-white rounded hover:bg-emerald-600 transition-colors">
                             Salvar

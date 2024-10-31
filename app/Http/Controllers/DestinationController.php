@@ -11,7 +11,8 @@ class DestinationController extends Controller
 
     public function index()
     {
-        $destinations = Destination::all(['id','cidade', 'estado']);
+        $destinations = Destination::with('rides')->get(['id', 'cidade', 'estado']);
+
         return Inertia::render('Destination', [
             'destinations' => $destinations,
         ]);

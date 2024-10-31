@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('rides', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->enum('horario', ['Manhã', 'Tarde', 'Noite']);
+            $table->enum('horario', ['manha', 'tarde', 'noite']);
             $table->foreignId('destino_id')
                   ->constrained('destinations')
                   ->onDelete('cascade');
