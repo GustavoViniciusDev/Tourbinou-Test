@@ -1,7 +1,5 @@
 
-# Tourbinou Test
-
-Teste Técnico para vaga de Desenvolvedor Full-Stack na Tourbinou.
+# Tourbinou
 
 ## Pré-requisitos
 
